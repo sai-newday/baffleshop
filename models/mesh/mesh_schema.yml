@@ -1,0 +1,41 @@
+version: 2
+
+sources:
+  - name: jaffleshop
+    database: baffleshop
+    schema: main
+    tables:
+      - name: public_customers
+
+models:
+  - name: public_customers_from_jaffle
+    columns:
+      - name: customer_id
+        tests:
+          - not_null
+          - unique
+
+  - name: jaffle_customer_names
+    columns:
+      - name: customer_id
+        tests:
+          - not_null
+
+  - name: jaffle_customer_metrics
+    columns:
+      - name: customer_id
+        tests:
+          - not_null
+
+  - name: local_customer_summary
+    columns:
+      - name: customer_id
+        tests:
+          - not_null
+
+  - name: local_customer_segments
+    columns:
+      - name: customer_id
+        tests:
+          - not_null
+

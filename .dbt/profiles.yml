@@ -1,0 +1,8 @@
+baffleshop:
+  outputs:
+    dev:
+      type: duckdb
+      path: "{{ env_var('BAFFLESHOP_DUCKDB_PATH', 'baffleshop.duckdb') }}"
+      threads: 4
+  target: dev
+
