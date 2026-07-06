@@ -20,9 +20,16 @@ jobs:
     runs-on: ubuntu-latest
     env:
       BAFFLESHOP_DUCKDB_PATH: baffleshop.duckdb
+      JAFFLESHOP_DUCKDB_PATH: baffleshop.duckdb
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Checkout jaffleshop
+        uses: actions/checkout@v4
+        with:
+          repository: sai-newday/jaffleshop
+          path: ./jaffleshop
 
       - name: Setup Python
         uses: actions/setup-python@v5
@@ -39,6 +46,13 @@ jobs:
         run: |
           mkdir -p ./.ci
           cat > ./.ci/profiles.yml <<'EOF'
+          jaffleshop:
+            outputs:
+              ci:
+                type: duckdb
+                path: "{{ env_var('JAFFLESHOP_DUCKDB_PATH', 'baffleshop.duckdb') }}"
+                threads: 4
+            target: ci
           baffleshop:
             outputs:
               ci:
@@ -47,6 +61,12 @@ jobs:
                 threads: 4
             target: ci
           EOF
+
+      - name: Build upstream public model
+        run: |
+          dbt deps --project-dir ./jaffleshop --profiles-dir ./.ci
+          dbt seed --project-dir ./jaffleshop --profiles-dir ./.ci
+          dbt run --project-dir ./jaffleshop --profiles-dir ./.ci --select +public_customers
 
       - name: Initialize dbt
         run: |

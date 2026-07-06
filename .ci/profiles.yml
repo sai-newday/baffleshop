@@ -1,0 +1,14 @@
+jaffleshop:
+  outputs:
+    ci:
+      type: duckdb
+      path: "{{ env_var('JAFFLESHOP_DUCKDB_PATH', 'baffleshop.duckdb') }}"
+      threads: 4
+  target: ci
+baffleshop:
+  outputs:
+    ci:
+      type: duckdb
+      path: "{{ env_var('BAFFLESHOP_DUCKDB_PATH', 'baffleshop.duckdb') }}"
+      threads: 4
+  target: ci
