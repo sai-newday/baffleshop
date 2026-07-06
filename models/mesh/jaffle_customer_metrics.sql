@@ -1,7 +1,7 @@
 select
     customer_id,
     number_of_orders,
-    lifetime_value*100 as lifetime_value,
+    lifetime_value as lifetime_value,
     case
         when lifetime_value >= 150 then 'high_value'
         when lifetime_value >= 75 then 'mid_value'
