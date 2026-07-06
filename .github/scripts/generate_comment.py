@@ -1,0 +1,179 @@
+#!/usr/bin/env python3
+"""
+Generate GitHub PR comment from impact analysis
+"""
+
+import json
+import argparse
+import sys
+from typing import Dict, List
+
+
+def format_changes_table(changes: Dict) -> str:
+    """Format changed assets as markdown table"""
+    rows = []
+    
+    for asset in changes.get('changed_assets', []):
+        model = asset.get('model', '')
+        change_type = asset.get('change_type', '')
+        columns = asset.get('columns', {})
+        
+        if columns:
+            for col_name, col_change in columns.items():
+                rows.append(f"| `{model}` | `{col_name}` | `{col_change}` |")
+        else:
+            rows.append(f"| `{model}` | — | `{change_type}` |")
+    
+    if not rows:
+        return "No changes detected"
+    
+    header = "| Model | Column | Change Type |\n|--------|--------|---------|"
+    return f"{header}\n" + "\n".join(rows)
+
+
+def format_direct_impact_table(impacts: List[Dict]) -> str:
+    """Format direct impacts as markdown table"""
+    if not impacts:
+        return "No direct impacts detected"
+    
+    rows = []
+    for impact in impacts:
+        source_model = impact.get('source_model', '')
+        source_column = impact.get('source_column', '—')
+        impacted_model = impact.get('impacted_model', '')
+        impacted_columns = impact.get('impacted_columns', [])
+        
+        cols_str = ', '.join([f'`{c}`' for c in impacted_columns]) if impacted_columns else '—'
+        rows.append(
+            f"| `{source_model}` | `{source_column}` | `{impacted_model}` | {cols_str} |"
+        )
+    
+    header = "| Source Model | Source Column | Impacted Model | Impacted Columns |\n|---|---|---|---|"
+    return f"{header}\n" + "\n".join(rows)
+
+
+def format_recursive_impact_table(impacts: List[Dict]) -> str:
+    """Format recursive impacts as markdown table"""
+    if not impacts:
+        return "No recursive impacts detected"
+    
+    rows = []
+    for impact in impacts:
+        source_model = impact.get('source_model', '')
+        source_column = impact.get('source_column', '—')
+        impacted_model = impact.get('impacted_model', '')
+        impacted_columns = impact.get('impacted_columns', [])
+        
+        cols_str = ', '.join([f'`{c}`' for c in impacted_columns]) if impacted_columns else '—'
+        rows.append(
+            f"| `{source_model}` | `{source_column}` | `{impacted_model}` | {cols_str} |"
+        )
+    
+    header = "| Source Model | Source Column | Impacted Model | Impacted Columns |\n|---|---|---|---|"
+    return f"{header}\n" + "\n".join(rows)
+
+
+def format_aggregated_impact_table(impacted_models: Dict) -> str:
+    """Format aggregated impact by model as markdown table"""
+    if not impacted_models:
+        return "No impacted models detected"
+    
+    rows = []
+    for model_name, info in impacted_models.items():
+        columns = info.get('columns', [])
+        source_changes = info.get('source_changes', [])
+        
+        cols_str = ', '.join([f'`{c}`' for c in columns]) if columns else '—'
+        
+        sources = []
+        for source in source_changes:
+            src_model = source.get('model', '')
+            src_col = source.get('column')
+            if src_col:
+                sources.append(f"`{src_model}`.`{src_col}`")
+            else:
+                sources.append(f"`{src_model}`")
+        
+        sources_str = ', '.join(set(sources)) if sources else '—'
+        rows.append(f"| `{model_name}` | {cols_str} | {sources_str} |")
+    
+    header = "| Impacted Model | Impacted Columns | Source Changes |\n|---|---|---|"
+    return f"{header}\n" + "\n".join(rows)
+
+
+def generate_comment(changes: Dict, impact: Dict) -> str:
+    """Generate markdown PR comment"""
+    summary = impact.get('summary', {})
+    
+    comment = """# 🔍 dbt Blast Radius Analysis
+
+## Changed Assets
+"""
+    
+    comment += format_changes_table(changes)
+    
+    # Direct impacts section
+    comment += "\n\n## Direct Impact (1st Order Dependencies)\n"
+    comment += format_direct_impact_table(impact.get('direct_impacts', []))
+    
+    # Recursive impacts section
+    comment += "\n\n## Recursive Impact (Downstream Dependencies)\n"
+    comment += format_recursive_impact_table(impact.get('recursive_impacts', []))
+    
+    # Aggregated impacts section
+    comment += "\n\n## Aggregated Impact by Model\n"
+    comment += format_aggregated_impact_table(impact.get('impacted_models', {}))
+    
+    # Summary
+    comment += f"""
+
+## Summary
+
+| Metric | Count |
+|--------|-------|
+| Changed Models | {summary.get('changed_models', 0)} |
+| Changed Columns | {summary.get('changed_columns', 0)} |
+| Directly Impacted Models | {summary.get('directly_impacted_models', 0)} |
+| Recursively Impacted Models | {summary.get('recursively_impacted_models', 0)} |
+| Impacted Columns | {summary.get('impacted_columns', 0)} |
+
+---
+
+*This analysis was automatically generated by the dbt Blast Radius Impact Analysis workflow.*
+"""
+    
+    return comment
+
+
+def main():
+    parser = argparse.ArgumentParser(description='Generate PR comment from impact analysis')
+    parser.add_argument('--impact-file', required=True, help='Impact results JSON file')
+    parser.add_argument('--changes-file', required=True, help='Changes JSON file')
+    parser.add_argument('--output', required=True, help='Output markdown file')
+    
+    args = parser.parse_args()
+    
+    try:
+        # Load files
+        with open(args.impact_file, 'r') as f:
+            impact = json.load(f)
+        
+        with open(args.changes_file, 'r') as f:
+            changes = json.load(f)
+        
+        # Generate comment
+        comment = generate_comment(changes, impact)
+        
+        # Save comment
+        with open(args.output, 'w') as f:
+            f.write(comment)
+        
+        print(f"PR comment generated: {args.output}")
+        
+    except Exception as e:
+        print(f"Error generating PR comment: {e}")
+        sys.exit(1)
+
+
+if __name__ == '__main__':
+    main()
