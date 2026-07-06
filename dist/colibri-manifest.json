@@ -1,0 +1,1073 @@
+{
+  "metadata": {
+    "colibri_version": "0.3.6",
+    "generated_at": "2026-07-06T19:38:33Z",
+    "adapter_type": "duckdb",
+    "dbt_version": "1.10.22",
+    "dbt_schema_version": "https://schemas.getdbt.com/dbt/manifest/v12.json",
+    "dbt_invocation_id": "2df3b951-ac83-495d-a8f7-895e99040e5c",
+    "dbt_project_name": "baffleshop",
+    "dbt_project_id": "7548f953cc96b312",
+    "total_model_count": 5,
+    "unmaterialized_model_count": 0
+  },
+  "nodes": {
+    "model.baffleshop.public_customers_from_jaffle": {
+      "id": "model.baffleshop.public_customers_from_jaffle",
+      "name": "public_customers_from_jaffle",
+      "fullName": "model.baffleshop.public_customers_from_jaffle",
+      "nodeType": "model",
+      "materialized": "table",
+      "modelType": "unknown",
+      "database": "baffleshop",
+      "schema": "main",
+      "path": "models/mesh/public_customers_from_jaffle.sql",
+      "description": "",
+      "contractEnforced": false,
+      "rawCode": "select\n    customer_id,\n    first_name,\n    last_name,\n    number_of_orders,\n    lifetime_value\nfrom {{ source('jaffleshop', 'public_customers') }}",
+      "compiledCode": "select\n    customer_id,\n    first_name,\n    last_name,\n    number_of_orders,\n    lifetime_value\nfrom \"baffleshop\".\"main\".\"public_customers\"",
+      "refs": [],
+      "tags": [],
+      "columns": {
+        "customer_id": {
+          "columnName": "customer_id",
+          "hasLineage": true,
+          "dataType": "INTEGER",
+          "description": "",
+          "tests": [
+            {
+              "unique_id": "test.baffleshop.not_null_public_customers_from_jaffle_customer_id.fa211f7e39",
+              "name": "not_null",
+              "namespace": null,
+              "config": {
+                "severity": "ERROR",
+                "warn_if": "!= 0",
+                "error_if": "!= 0"
+              },
+              "kwargs": {
+                "column_name": "customer_id",
+                "model": "{{ get_where_subquery(ref('public_customers_from_jaffle')) }}"
+              },
+              "compiled_code": "\n    \n    \n\n\n\nselect customer_id\nfrom \"baffleshop\".\"main\".\"public_customers_from_jaffle\"\nwhere customer_id is null\n\n\n"
+            },
+            {
+              "unique_id": "test.baffleshop.unique_public_customers_from_jaffle_customer_id.ff82506784",
+              "name": "unique",
+              "namespace": null,
+              "config": {
+                "severity": "ERROR",
+                "warn_if": "!= 0",
+                "error_if": "!= 0"
+              },
+              "kwargs": {
+                "column_name": "customer_id",
+                "model": "{{ get_where_subquery(ref('public_customers_from_jaffle')) }}"
+              },
+              "compiled_code": "\n    \n    \n\nselect\n    customer_id as unique_field,\n    count(*) as n_records\n\nfrom \"baffleshop\".\"main\".\"public_customers_from_jaffle\"\nwhere customer_id is not null\ngroup by customer_id\nhaving count(*) > 1\n\n\n"
+            }
+          ],
+          "lineageType": "pass-through"
+        },
+        "first_name": {
+          "columnName": "first_name",
+          "hasLineage": true,
+          "dataType": "VARCHAR",
+          "lineageType": "pass-through"
+        },
+        "last_name": {
+          "columnName": "last_name",
+          "hasLineage": true,
+          "dataType": "VARCHAR",
+          "lineageType": "pass-through"
+        },
+        "number_of_orders": {
+          "columnName": "number_of_orders",
+          "hasLineage": true,
+          "dataType": "BIGINT",
+          "lineageType": "pass-through"
+        },
+        "lifetime_value": {
+          "columnName": "lifetime_value",
+          "hasLineage": true,
+          "dataType": "DOUBLE",
+          "lineageType": "pass-through"
+        }
+      },
+      "relationName": "\"baffleshop\".\"main\".\"public_customers_from_jaffle\""
+    },
+    "source.baffleshop.jaffleshop.public_customers": {
+      "id": "source.baffleshop.jaffleshop.public_customers",
+      "name": "public_customers",
+      "fullName": "source.baffleshop.jaffleshop.public_customers",
+      "nodeType": "source",
+      "materialized": "unknown",
+      "modelType": "unknown",
+      "database": "baffleshop",
+      "schema": "main",
+      "path": "models/mesh/mesh_schema.yml",
+      "description": "",
+      "contractEnforced": null,
+      "rawCode": null,
+      "compiledCode": null,
+      "refs": [],
+      "tags": [],
+      "columns": {
+        "customer_id": {
+          "columnName": "customer_id",
+          "hasLineage": true,
+          "dataType": "INTEGER"
+        },
+        "first_name": {
+          "columnName": "first_name",
+          "hasLineage": true,
+          "dataType": "VARCHAR"
+        },
+        "last_name": {
+          "columnName": "last_name",
+          "hasLineage": true,
+          "dataType": "VARCHAR"
+        },
+        "first_order_date": {
+          "columnName": "first_order_date",
+          "hasLineage": false,
+          "dataType": "DATE"
+        },
+        "most_recent_order_date": {
+          "columnName": "most_recent_order_date",
+          "hasLineage": false,
+          "dataType": "DATE"
+        },
+        "number_of_orders": {
+          "columnName": "number_of_orders",
+          "hasLineage": true,
+          "dataType": "BIGINT"
+        },
+        "lifetime_value": {
+          "columnName": "lifetime_value",
+          "hasLineage": true,
+          "dataType": "DOUBLE"
+        }
+      },
+      "relationName": "\"baffleshop\".\"main\".\"public_customers\""
+    },
+    "model.baffleshop.local_customer_segments": {
+      "id": "model.baffleshop.local_customer_segments",
+      "name": "local_customer_segments",
+      "fullName": "model.baffleshop.local_customer_segments",
+      "nodeType": "model",
+      "materialized": "table",
+      "modelType": "unknown",
+      "database": "baffleshop",
+      "schema": "main",
+      "path": "models/mesh/local_customer_segments.sql",
+      "description": "",
+      "contractEnforced": false,
+      "rawCode": "select\n    customer_id,\n    first_name,\n    last_name,\n    number_of_orders,\n    lifetime_value,\n    value_tier,\n    case\n        when number_of_orders >= 3 then 'repeat'\n        else 'new'\n    end as order_segment\nfrom {{ ref('local_customer_summary') }}",
+      "compiledCode": "select\n    customer_id,\n    first_name,\n    last_name,\n    number_of_orders,\n    lifetime_value,\n    value_tier,\n    case\n        when number_of_orders >= 3 then 'repeat'\n        else 'new'\n    end as order_segment\nfrom \"baffleshop\".\"main\".\"local_customer_summary\"",
+      "refs": [
+        {
+          "name": "local_customer_summary",
+          "package": null,
+          "version": null
+        }
+      ],
+      "tags": [],
+      "columns": {
+        "customer_id": {
+          "columnName": "customer_id",
+          "hasLineage": true,
+          "dataType": "INTEGER",
+          "description": "",
+          "tests": [
+            {
+              "unique_id": "test.baffleshop.not_null_local_customer_segments_customer_id.4d84758125",
+              "name": "not_null",
+              "namespace": null,
+              "config": {
+                "severity": "ERROR",
+                "warn_if": "!= 0",
+                "error_if": "!= 0"
+              },
+              "kwargs": {
+                "column_name": "customer_id",
+                "model": "{{ get_where_subquery(ref('local_customer_segments')) }}"
+              },
+              "compiled_code": "\n    \n    \n\n\n\nselect customer_id\nfrom \"baffleshop\".\"main\".\"local_customer_segments\"\nwhere customer_id is null\n\n\n"
+            }
+          ],
+          "lineageType": "pass-through"
+        },
+        "first_name": {
+          "columnName": "first_name",
+          "hasLineage": true,
+          "dataType": "VARCHAR",
+          "lineageType": "pass-through"
+        },
+        "last_name": {
+          "columnName": "last_name",
+          "hasLineage": true,
+          "dataType": "VARCHAR",
+          "lineageType": "pass-through"
+        },
+        "number_of_orders": {
+          "columnName": "number_of_orders",
+          "hasLineage": true,
+          "dataType": "BIGINT",
+          "lineageType": "pass-through"
+        },
+        "lifetime_value": {
+          "columnName": "lifetime_value",
+          "hasLineage": true,
+          "dataType": "DOUBLE",
+          "lineageType": "pass-through"
+        },
+        "value_tier": {
+          "columnName": "value_tier",
+          "hasLineage": true,
+          "dataType": "VARCHAR",
+          "lineageType": "pass-through"
+        },
+        "order_segment": {
+          "columnName": "order_segment",
+          "hasLineage": true,
+          "dataType": "VARCHAR",
+          "lineageType": "transformation"
+        }
+      },
+      "relationName": "\"baffleshop\".\"main\".\"local_customer_segments\""
+    },
+    "model.baffleshop.local_customer_summary": {
+      "id": "model.baffleshop.local_customer_summary",
+      "name": "local_customer_summary",
+      "fullName": "model.baffleshop.local_customer_summary",
+      "nodeType": "model",
+      "materialized": "table",
+      "modelType": "unknown",
+      "database": "baffleshop",
+      "schema": "main",
+      "path": "models/mesh/local_customer_summary.sql",
+      "description": "",
+      "contractEnforced": false,
+      "rawCode": "select\n    metrics.customer_id,\n    names.first_name,\n    names.last_name,\n    metrics.number_of_orders,\n    metrics.lifetime_value,\n    metrics.value_tier\nfrom {{ ref('jaffle_customer_metrics') }} as metrics\nleft join {{ ref('jaffle_customer_names') }} as names\n    on metrics.customer_id = names.customer_id",
+      "compiledCode": "select\n    metrics.customer_id,\n    names.first_name,\n    names.last_name,\n    metrics.number_of_orders,\n    metrics.lifetime_value,\n    metrics.value_tier\nfrom \"baffleshop\".\"main\".\"jaffle_customer_metrics\" as metrics\nleft join \"baffleshop\".\"main\".\"jaffle_customer_names\" as names\n    on metrics.customer_id = names.customer_id",
+      "refs": [
+        {
+          "name": "jaffle_customer_metrics",
+          "package": null,
+          "version": null
+        },
+        {
+          "name": "jaffle_customer_names",
+          "package": null,
+          "version": null
+        }
+      ],
+      "tags": [],
+      "columns": {
+        "customer_id": {
+          "columnName": "customer_id",
+          "hasLineage": true,
+          "dataType": "INTEGER",
+          "description": "",
+          "tests": [
+            {
+              "unique_id": "test.baffleshop.not_null_local_customer_summary_customer_id.440f24ac45",
+              "name": "not_null",
+              "namespace": null,
+              "config": {
+                "severity": "ERROR",
+                "warn_if": "!= 0",
+                "error_if": "!= 0"
+              },
+              "kwargs": {
+                "column_name": "customer_id",
+                "model": "{{ get_where_subquery(ref('local_customer_summary')) }}"
+              },
+              "compiled_code": "\n    \n    \n\n\n\nselect customer_id\nfrom \"baffleshop\".\"main\".\"local_customer_summary\"\nwhere customer_id is null\n\n\n"
+            }
+          ],
+          "lineageType": "pass-through"
+        },
+        "first_name": {
+          "columnName": "first_name",
+          "hasLineage": true,
+          "dataType": "VARCHAR",
+          "lineageType": "pass-through"
+        },
+        "last_name": {
+          "columnName": "last_name",
+          "hasLineage": true,
+          "dataType": "VARCHAR",
+          "lineageType": "pass-through"
+        },
+        "number_of_orders": {
+          "columnName": "number_of_orders",
+          "hasLineage": true,
+          "dataType": "BIGINT",
+          "lineageType": "pass-through"
+        },
+        "lifetime_value": {
+          "columnName": "lifetime_value",
+          "hasLineage": true,
+          "dataType": "DOUBLE",
+          "lineageType": "pass-through"
+        },
+        "value_tier": {
+          "columnName": "value_tier",
+          "hasLineage": true,
+          "dataType": "VARCHAR",
+          "lineageType": "pass-through"
+        }
+      },
+      "relationName": "\"baffleshop\".\"main\".\"local_customer_summary\""
+    },
+    "model.baffleshop.jaffle_customer_metrics": {
+      "id": "model.baffleshop.jaffle_customer_metrics",
+      "name": "jaffle_customer_metrics",
+      "fullName": "model.baffleshop.jaffle_customer_metrics",
+      "nodeType": "model",
+      "materialized": "table",
+      "modelType": "unknown",
+      "database": "baffleshop",
+      "schema": "main",
+      "path": "models/mesh/jaffle_customer_metrics.sql",
+      "description": "",
+      "contractEnforced": false,
+      "rawCode": "select\n    customer_id,\n    number_of_orders,\n    lifetime_value as lifetime_value,\n    case\n        when lifetime_value >= 150 then 'high_value'\n        when lifetime_value >= 75 then 'mid_value'\n        else 'standard'\n    end as value_tier\nfrom {{ source('jaffleshop', 'public_customers') }}",
+      "compiledCode": "select\n    customer_id,\n    number_of_orders,\n    lifetime_value as lifetime_value,\n    case\n        when lifetime_value >= 150 then 'high_value'\n        when lifetime_value >= 75 then 'mid_value'\n        else 'standard'\n    end as value_tier\nfrom \"baffleshop\".\"main\".\"public_customers\"",
+      "refs": [],
+      "tags": [],
+      "columns": {
+        "customer_id": {
+          "columnName": "customer_id",
+          "hasLineage": true,
+          "dataType": "INTEGER",
+          "description": "",
+          "tests": [
+            {
+              "unique_id": "test.baffleshop.not_null_jaffle_customer_metrics_customer_id.3d8a9681a8",
+              "name": "not_null",
+              "namespace": null,
+              "config": {
+                "severity": "ERROR",
+                "warn_if": "!= 0",
+                "error_if": "!= 0"
+              },
+              "kwargs": {
+                "column_name": "customer_id",
+                "model": "{{ get_where_subquery(ref('jaffle_customer_metrics')) }}"
+              },
+              "compiled_code": "\n    \n    \n\n\n\nselect customer_id\nfrom \"baffleshop\".\"main\".\"jaffle_customer_metrics\"\nwhere customer_id is null\n\n\n"
+            }
+          ],
+          "lineageType": "pass-through"
+        },
+        "number_of_orders": {
+          "columnName": "number_of_orders",
+          "hasLineage": true,
+          "dataType": "BIGINT",
+          "lineageType": "pass-through"
+        },
+        "lifetime_value": {
+          "columnName": "lifetime_value",
+          "hasLineage": true,
+          "dataType": "DOUBLE",
+          "lineageType": "pass-through"
+        },
+        "value_tier": {
+          "columnName": "value_tier",
+          "hasLineage": true,
+          "dataType": "VARCHAR",
+          "lineageType": "transformation"
+        }
+      },
+      "relationName": "\"baffleshop\".\"main\".\"jaffle_customer_metrics\""
+    },
+    "model.baffleshop.jaffle_customer_names": {
+      "id": "model.baffleshop.jaffle_customer_names",
+      "name": "jaffle_customer_names",
+      "fullName": "model.baffleshop.jaffle_customer_names",
+      "nodeType": "model",
+      "materialized": "table",
+      "modelType": "unknown",
+      "database": "baffleshop",
+      "schema": "main",
+      "path": "models/mesh/jaffle_customer_names.sql",
+      "description": "",
+      "contractEnforced": false,
+      "rawCode": "select\n    customer_id,\n    first_name,\n    last_name\nfrom {{ source('jaffleshop', 'public_customers') }}",
+      "compiledCode": "select\n    customer_id,\n    first_name,\n    last_name\nfrom \"baffleshop\".\"main\".\"public_customers\"",
+      "refs": [],
+      "tags": [],
+      "columns": {
+        "customer_id": {
+          "columnName": "customer_id",
+          "hasLineage": true,
+          "dataType": "INTEGER",
+          "description": "",
+          "tests": [
+            {
+              "unique_id": "test.baffleshop.not_null_jaffle_customer_names_customer_id.ced2eb0520",
+              "name": "not_null",
+              "namespace": null,
+              "config": {
+                "severity": "ERROR",
+                "warn_if": "!= 0",
+                "error_if": "!= 0"
+              },
+              "kwargs": {
+                "column_name": "customer_id",
+                "model": "{{ get_where_subquery(ref('jaffle_customer_names')) }}"
+              },
+              "compiled_code": "\n    \n    \n\n\n\nselect customer_id\nfrom \"baffleshop\".\"main\".\"jaffle_customer_names\"\nwhere customer_id is null\n\n\n"
+            }
+          ],
+          "lineageType": "pass-through"
+        },
+        "first_name": {
+          "columnName": "first_name",
+          "hasLineage": true,
+          "dataType": "VARCHAR",
+          "lineageType": "pass-through"
+        },
+        "last_name": {
+          "columnName": "last_name",
+          "hasLineage": true,
+          "dataType": "VARCHAR",
+          "lineageType": "pass-through"
+        }
+      },
+      "relationName": "\"baffleshop\".\"main\".\"jaffle_customer_names\""
+    }
+  },
+  "lineage": {
+    "edges": [
+      {
+        "id": 1,
+        "source": "source.baffleshop.jaffleshop.public_customers",
+        "target": "model.baffleshop.public_customers_from_jaffle",
+        "sourceColumn": "customer_id",
+        "targetColumn": "customer_id"
+      },
+      {
+        "id": 2,
+        "source": "source.baffleshop.jaffleshop.public_customers",
+        "target": "model.baffleshop.public_customers_from_jaffle",
+        "sourceColumn": "first_name",
+        "targetColumn": "first_name"
+      },
+      {
+        "id": 3,
+        "source": "source.baffleshop.jaffleshop.public_customers",
+        "target": "model.baffleshop.public_customers_from_jaffle",
+        "sourceColumn": "last_name",
+        "targetColumn": "last_name"
+      },
+      {
+        "id": 4,
+        "source": "source.baffleshop.jaffleshop.public_customers",
+        "target": "model.baffleshop.public_customers_from_jaffle",
+        "sourceColumn": "number_of_orders",
+        "targetColumn": "number_of_orders"
+      },
+      {
+        "id": 5,
+        "source": "source.baffleshop.jaffleshop.public_customers",
+        "target": "model.baffleshop.public_customers_from_jaffle",
+        "sourceColumn": "lifetime_value",
+        "targetColumn": "lifetime_value"
+      },
+      {
+        "id": 6,
+        "source": "model.baffleshop.local_customer_summary",
+        "target": "model.baffleshop.local_customer_segments",
+        "sourceColumn": "customer_id",
+        "targetColumn": "customer_id"
+      },
+      {
+        "id": 7,
+        "source": "model.baffleshop.local_customer_summary",
+        "target": "model.baffleshop.local_customer_segments",
+        "sourceColumn": "first_name",
+        "targetColumn": "first_name"
+      },
+      {
+        "id": 8,
+        "source": "model.baffleshop.local_customer_summary",
+        "target": "model.baffleshop.local_customer_segments",
+        "sourceColumn": "last_name",
+        "targetColumn": "last_name"
+      },
+      {
+        "id": 9,
+        "source": "model.baffleshop.local_customer_summary",
+        "target": "model.baffleshop.local_customer_segments",
+        "sourceColumn": "number_of_orders",
+        "targetColumn": "number_of_orders"
+      },
+      {
+        "id": 10,
+        "source": "model.baffleshop.local_customer_summary",
+        "target": "model.baffleshop.local_customer_segments",
+        "sourceColumn": "lifetime_value",
+        "targetColumn": "lifetime_value"
+      },
+      {
+        "id": 11,
+        "source": "model.baffleshop.local_customer_summary",
+        "target": "model.baffleshop.local_customer_segments",
+        "sourceColumn": "value_tier",
+        "targetColumn": "value_tier"
+      },
+      {
+        "id": 12,
+        "source": "model.baffleshop.local_customer_summary",
+        "target": "model.baffleshop.local_customer_segments",
+        "sourceColumn": "number_of_orders",
+        "targetColumn": "order_segment"
+      },
+      {
+        "id": 13,
+        "source": "model.baffleshop.jaffle_customer_metrics",
+        "target": "model.baffleshop.local_customer_summary",
+        "sourceColumn": "customer_id",
+        "targetColumn": "customer_id"
+      },
+      {
+        "id": 14,
+        "source": "model.baffleshop.jaffle_customer_names",
+        "target": "model.baffleshop.local_customer_summary",
+        "sourceColumn": "first_name",
+        "targetColumn": "first_name"
+      },
+      {
+        "id": 15,
+        "source": "model.baffleshop.jaffle_customer_names",
+        "target": "model.baffleshop.local_customer_summary",
+        "sourceColumn": "last_name",
+        "targetColumn": "last_name"
+      },
+      {
+        "id": 16,
+        "source": "model.baffleshop.jaffle_customer_metrics",
+        "target": "model.baffleshop.local_customer_summary",
+        "sourceColumn": "number_of_orders",
+        "targetColumn": "number_of_orders"
+      },
+      {
+        "id": 17,
+        "source": "model.baffleshop.jaffle_customer_metrics",
+        "target": "model.baffleshop.local_customer_summary",
+        "sourceColumn": "lifetime_value",
+        "targetColumn": "lifetime_value"
+      },
+      {
+        "id": 18,
+        "source": "model.baffleshop.jaffle_customer_metrics",
+        "target": "model.baffleshop.local_customer_summary",
+        "sourceColumn": "value_tier",
+        "targetColumn": "value_tier"
+      },
+      {
+        "id": 19,
+        "source": "model.baffleshop.jaffle_customer_metrics",
+        "target": "model.baffleshop.local_customer_summary",
+        "sourceColumn": "customer_id",
+        "targetColumn": "",
+        "edgeType": "join"
+      },
+      {
+        "id": 20,
+        "source": "model.baffleshop.jaffle_customer_names",
+        "target": "model.baffleshop.local_customer_summary",
+        "sourceColumn": "customer_id",
+        "targetColumn": "",
+        "edgeType": "join"
+      },
+      {
+        "id": 21,
+        "source": "source.baffleshop.jaffleshop.public_customers",
+        "target": "model.baffleshop.jaffle_customer_metrics",
+        "sourceColumn": "customer_id",
+        "targetColumn": "customer_id"
+      },
+      {
+        "id": 22,
+        "source": "source.baffleshop.jaffleshop.public_customers",
+        "target": "model.baffleshop.jaffle_customer_metrics",
+        "sourceColumn": "number_of_orders",
+        "targetColumn": "number_of_orders"
+      },
+      {
+        "id": 23,
+        "source": "source.baffleshop.jaffleshop.public_customers",
+        "target": "model.baffleshop.jaffle_customer_metrics",
+        "sourceColumn": "lifetime_value",
+        "targetColumn": "lifetime_value"
+      },
+      {
+        "id": 24,
+        "source": "source.baffleshop.jaffleshop.public_customers",
+        "target": "model.baffleshop.jaffle_customer_metrics",
+        "sourceColumn": "lifetime_value",
+        "targetColumn": "value_tier"
+      },
+      {
+        "id": 25,
+        "source": "source.baffleshop.jaffleshop.public_customers",
+        "target": "model.baffleshop.jaffle_customer_names",
+        "sourceColumn": "customer_id",
+        "targetColumn": "customer_id"
+      },
+      {
+        "id": 26,
+        "source": "source.baffleshop.jaffleshop.public_customers",
+        "target": "model.baffleshop.jaffle_customer_names",
+        "sourceColumn": "first_name",
+        "targetColumn": "first_name"
+      },
+      {
+        "id": 27,
+        "source": "source.baffleshop.jaffleshop.public_customers",
+        "target": "model.baffleshop.jaffle_customer_names",
+        "sourceColumn": "last_name",
+        "targetColumn": "last_name"
+      },
+      {
+        "id": 28,
+        "source": "source.baffleshop.jaffleshop.public_customers",
+        "target": "model.baffleshop.public_customers_from_jaffle",
+        "sourceColumn": "",
+        "targetColumn": ""
+      },
+      {
+        "id": 29,
+        "source": "model.baffleshop.local_customer_summary",
+        "target": "model.baffleshop.local_customer_segments",
+        "sourceColumn": "",
+        "targetColumn": ""
+      },
+      {
+        "id": 30,
+        "source": "model.baffleshop.jaffle_customer_metrics",
+        "target": "model.baffleshop.local_customer_summary",
+        "sourceColumn": "",
+        "targetColumn": ""
+      },
+      {
+        "id": 31,
+        "source": "model.baffleshop.jaffle_customer_names",
+        "target": "model.baffleshop.local_customer_summary",
+        "sourceColumn": "",
+        "targetColumn": ""
+      },
+      {
+        "id": 32,
+        "source": "source.baffleshop.jaffleshop.public_customers",
+        "target": "model.baffleshop.jaffle_customer_metrics",
+        "sourceColumn": "",
+        "targetColumn": ""
+      },
+      {
+        "id": 33,
+        "source": "source.baffleshop.jaffleshop.public_customers",
+        "target": "model.baffleshop.jaffle_customer_names",
+        "sourceColumn": "",
+        "targetColumn": ""
+      }
+    ],
+    "parents": {
+      "model.baffleshop.public_customers_from_jaffle": {
+        "customer_id": [
+          {
+            "column": "customer_id",
+            "dbt_node": "source.baffleshop.jaffleshop.public_customers",
+            "lineage_type": "pass-through"
+          }
+        ],
+        "first_name": [
+          {
+            "column": "first_name",
+            "dbt_node": "source.baffleshop.jaffleshop.public_customers",
+            "lineage_type": "pass-through"
+          }
+        ],
+        "last_name": [
+          {
+            "column": "last_name",
+            "dbt_node": "source.baffleshop.jaffleshop.public_customers",
+            "lineage_type": "pass-through"
+          }
+        ],
+        "number_of_orders": [
+          {
+            "column": "number_of_orders",
+            "dbt_node": "source.baffleshop.jaffleshop.public_customers",
+            "lineage_type": "pass-through"
+          }
+        ],
+        "lifetime_value": [
+          {
+            "column": "lifetime_value",
+            "dbt_node": "source.baffleshop.jaffleshop.public_customers",
+            "lineage_type": "pass-through"
+          }
+        ]
+      },
+      "model.baffleshop.local_customer_segments": {
+        "customer_id": [
+          {
+            "column": "customer_id",
+            "dbt_node": "model.baffleshop.local_customer_summary",
+            "lineage_type": "pass-through"
+          }
+        ],
+        "first_name": [
+          {
+            "column": "first_name",
+            "dbt_node": "model.baffleshop.local_customer_summary",
+            "lineage_type": "pass-through"
+          }
+        ],
+        "last_name": [
+          {
+            "column": "last_name",
+            "dbt_node": "model.baffleshop.local_customer_summary",
+            "lineage_type": "pass-through"
+          }
+        ],
+        "number_of_orders": [
+          {
+            "column": "number_of_orders",
+            "dbt_node": "model.baffleshop.local_customer_summary",
+            "lineage_type": "pass-through"
+          }
+        ],
+        "lifetime_value": [
+          {
+            "column": "lifetime_value",
+            "dbt_node": "model.baffleshop.local_customer_summary",
+            "lineage_type": "pass-through"
+          }
+        ],
+        "value_tier": [
+          {
+            "column": "value_tier",
+            "dbt_node": "model.baffleshop.local_customer_summary",
+            "lineage_type": "pass-through"
+          }
+        ],
+        "order_segment": [
+          {
+            "column": "number_of_orders",
+            "dbt_node": "model.baffleshop.local_customer_summary",
+            "lineage_type": "transformation"
+          }
+        ]
+      },
+      "model.baffleshop.local_customer_summary": {
+        "customer_id": [
+          {
+            "column": "customer_id",
+            "dbt_node": "model.baffleshop.jaffle_customer_metrics",
+            "lineage_type": "pass-through"
+          }
+        ],
+        "first_name": [
+          {
+            "column": "first_name",
+            "dbt_node": "model.baffleshop.jaffle_customer_names",
+            "lineage_type": "pass-through"
+          }
+        ],
+        "last_name": [
+          {
+            "column": "last_name",
+            "dbt_node": "model.baffleshop.jaffle_customer_names",
+            "lineage_type": "pass-through"
+          }
+        ],
+        "number_of_orders": [
+          {
+            "column": "number_of_orders",
+            "dbt_node": "model.baffleshop.jaffle_customer_metrics",
+            "lineage_type": "pass-through"
+          }
+        ],
+        "lifetime_value": [
+          {
+            "column": "lifetime_value",
+            "dbt_node": "model.baffleshop.jaffle_customer_metrics",
+            "lineage_type": "pass-through"
+          }
+        ],
+        "value_tier": [
+          {
+            "column": "value_tier",
+            "dbt_node": "model.baffleshop.jaffle_customer_metrics",
+            "lineage_type": "pass-through"
+          }
+        ],
+        "__colibri_join__": [
+          {
+            "column": "customer_id",
+            "dbt_node": "model.baffleshop.jaffle_customer_metrics",
+            "lineage_type": "join"
+          },
+          {
+            "column": "customer_id",
+            "dbt_node": "model.baffleshop.jaffle_customer_names",
+            "lineage_type": "join"
+          }
+        ]
+      },
+      "model.baffleshop.jaffle_customer_metrics": {
+        "customer_id": [
+          {
+            "column": "customer_id",
+            "dbt_node": "source.baffleshop.jaffleshop.public_customers",
+            "lineage_type": "pass-through"
+          }
+        ],
+        "number_of_orders": [
+          {
+            "column": "number_of_orders",
+            "dbt_node": "source.baffleshop.jaffleshop.public_customers",
+            "lineage_type": "pass-through"
+          }
+        ],
+        "lifetime_value": [
+          {
+            "column": "lifetime_value",
+            "dbt_node": "source.baffleshop.jaffleshop.public_customers",
+            "lineage_type": "pass-through"
+          }
+        ],
+        "value_tier": [
+          {
+            "column": "lifetime_value",
+            "dbt_node": "source.baffleshop.jaffleshop.public_customers",
+            "lineage_type": "transformation"
+          }
+        ]
+      },
+      "model.baffleshop.jaffle_customer_names": {
+        "customer_id": [
+          {
+            "column": "customer_id",
+            "dbt_node": "source.baffleshop.jaffleshop.public_customers",
+            "lineage_type": "pass-through"
+          }
+        ],
+        "first_name": [
+          {
+            "column": "first_name",
+            "dbt_node": "source.baffleshop.jaffleshop.public_customers",
+            "lineage_type": "pass-through"
+          }
+        ],
+        "last_name": [
+          {
+            "column": "last_name",
+            "dbt_node": "source.baffleshop.jaffleshop.public_customers",
+            "lineage_type": "pass-through"
+          }
+        ]
+      }
+    },
+    "children": {
+      "source.baffleshop.jaffleshop.public_customers": {
+        "customer_id": [
+          {
+            "column": "customer_id",
+            "dbt_node": "model.baffleshop.public_customers_from_jaffle"
+          },
+          {
+            "column": "customer_id",
+            "dbt_node": "model.baffleshop.jaffle_customer_metrics"
+          },
+          {
+            "column": "customer_id",
+            "dbt_node": "model.baffleshop.jaffle_customer_names"
+          }
+        ],
+        "first_name": [
+          {
+            "column": "first_name",
+            "dbt_node": "model.baffleshop.public_customers_from_jaffle"
+          },
+          {
+            "column": "first_name",
+            "dbt_node": "model.baffleshop.jaffle_customer_names"
+          }
+        ],
+        "last_name": [
+          {
+            "column": "last_name",
+            "dbt_node": "model.baffleshop.public_customers_from_jaffle"
+          },
+          {
+            "column": "last_name",
+            "dbt_node": "model.baffleshop.jaffle_customer_names"
+          }
+        ],
+        "number_of_orders": [
+          {
+            "column": "number_of_orders",
+            "dbt_node": "model.baffleshop.public_customers_from_jaffle"
+          },
+          {
+            "column": "number_of_orders",
+            "dbt_node": "model.baffleshop.jaffle_customer_metrics"
+          }
+        ],
+        "lifetime_value": [
+          {
+            "column": "lifetime_value",
+            "dbt_node": "model.baffleshop.public_customers_from_jaffle"
+          },
+          {
+            "column": "lifetime_value",
+            "dbt_node": "model.baffleshop.jaffle_customer_metrics"
+          },
+          {
+            "column": "value_tier",
+            "dbt_node": "model.baffleshop.jaffle_customer_metrics"
+          }
+        ]
+      },
+      "model.baffleshop.local_customer_summary": {
+        "customer_id": [
+          {
+            "column": "customer_id",
+            "dbt_node": "model.baffleshop.local_customer_segments"
+          }
+        ],
+        "first_name": [
+          {
+            "column": "first_name",
+            "dbt_node": "model.baffleshop.local_customer_segments"
+          }
+        ],
+        "last_name": [
+          {
+            "column": "last_name",
+            "dbt_node": "model.baffleshop.local_customer_segments"
+          }
+        ],
+        "number_of_orders": [
+          {
+            "column": "number_of_orders",
+            "dbt_node": "model.baffleshop.local_customer_segments"
+          },
+          {
+            "column": "order_segment",
+            "dbt_node": "model.baffleshop.local_customer_segments"
+          }
+        ],
+        "lifetime_value": [
+          {
+            "column": "lifetime_value",
+            "dbt_node": "model.baffleshop.local_customer_segments"
+          }
+        ],
+        "value_tier": [
+          {
+            "column": "value_tier",
+            "dbt_node": "model.baffleshop.local_customer_segments"
+          }
+        ]
+      },
+      "model.baffleshop.jaffle_customer_metrics": {
+        "customer_id": [
+          {
+            "column": "customer_id",
+            "dbt_node": "model.baffleshop.local_customer_summary"
+          },
+          {
+            "column": "__colibri_join__",
+            "dbt_node": "model.baffleshop.local_customer_summary"
+          }
+        ],
+        "number_of_orders": [
+          {
+            "column": "number_of_orders",
+            "dbt_node": "model.baffleshop.local_customer_summary"
+          }
+        ],
+        "lifetime_value": [
+          {
+            "column": "lifetime_value",
+            "dbt_node": "model.baffleshop.local_customer_summary"
+          }
+        ],
+        "value_tier": [
+          {
+            "column": "value_tier",
+            "dbt_node": "model.baffleshop.local_customer_summary"
+          }
+        ]
+      },
+      "model.baffleshop.jaffle_customer_names": {
+        "first_name": [
+          {
+            "column": "first_name",
+            "dbt_node": "model.baffleshop.local_customer_summary"
+          }
+        ],
+        "last_name": [
+          {
+            "column": "last_name",
+            "dbt_node": "model.baffleshop.local_customer_summary"
+          }
+        ],
+        "customer_id": [
+          {
+            "column": "__colibri_join__",
+            "dbt_node": "model.baffleshop.local_customer_summary"
+          }
+        ]
+      }
+    }
+  },
+  "tree": {
+    "byDatabase": {
+      "baffleshop": {
+        "main": [
+          "model.baffleshop.jaffle_customer_metrics",
+          "model.baffleshop.jaffle_customer_names",
+          "model.baffleshop.local_customer_segments",
+          "model.baffleshop.local_customer_summary",
+          "source.baffleshop.jaffleshop.public_customers",
+          "model.baffleshop.public_customers_from_jaffle"
+        ]
+      }
+    },
+    "byPath": {
+      "baffleshop": {
+        "models": {
+          "mesh": {
+            "__items__": [
+              "model.baffleshop.jaffle_customer_metrics",
+              "model.baffleshop.jaffle_customer_names",
+              "model.baffleshop.local_customer_segments",
+              "model.baffleshop.local_customer_summary",
+              "model.baffleshop.public_customers_from_jaffle"
+            ]
+          }
+        },
+        "sources": {
+          "models": {
+            "mesh": {
+              "main": {
+                "__items__": [
+                  "source.baffleshop.jaffleshop.public_customers"
+                ]
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
