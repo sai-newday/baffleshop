@@ -1,0 +1,14 @@
+colibri blast-radius \
+--model model.baffleshop.local_customer_summary \
+--manifest /Users/n45413/dev/dbt-lineage-tools/combined-lineage/dist/_merged_artifacts/manifest.json \
+--catalog /Users/n45413/dev/dbt-lineage-tools/combined-lineage/dist/_merged_artifacts/catalog.json \
+--format text
+
+
+cd /Users/n45413/dev/dbt-colibri
+PYTHONPATH=src /usr/bin/python3 -m dbt_colibri.cli.cli blast-radius \
+  --model source.jaffleshop.jaffle_shop.raw_customers \
+  --columns id \
+  --manifest combined-lineage/dist/_merged_artifacts/manifest.json \
+  --catalog combined-lineage/dist/_merged_artifacts/catalog.json \
+  --format text

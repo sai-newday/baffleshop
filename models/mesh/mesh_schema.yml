@@ -39,3 +39,8 @@ models:
         tests:
           - not_null
 
+  - name: colibri_union_lineage
+    columns:
+      - name: customer_id
+        tests:
+          - not_null
