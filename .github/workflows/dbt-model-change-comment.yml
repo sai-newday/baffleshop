@@ -1,0 +1,24 @@
+name: dbt Model Change Comment
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - ready_for_review
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  analyze-dbt-model-changes:
+    if: github.event.pull_request.draft == false
+    uses: sai-newday/dbt-colibri/.github/workflows/dbt-model-change-comment.yml@main
+    with:
+      dbt_profile_name: baffleshop
+      base_sha: ${{ github.event.pull_request.base.sha }}
+      head_sha: ${{ github.event.pull_request.head.sha }}
+      pr_number: ${{ github.event.pull_request.number }}
+    secrets: inherit
